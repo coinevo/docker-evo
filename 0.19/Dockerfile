@@ -1,10 +1,9 @@
 FROM debian:stable-slim
 
-LABEL maintainer.0="João Fonseca (@joaopaulofonseca)" \
-  maintainer.1="Pedro Branco (@pedrobranco)" \
-  maintainer.2="Rui Marinho (@ruimarinho)"
+LABEL maintainer.0="George Michael (@georgemichael)" \
+  maintainer.1="evox (@evox)"
 
-RUN useradd -r litecoin \
+RUN useradd -r evo \
   && apt-get update -y \
   && apt-get install -y curl gnupg \
   && apt-get clean \
@@ -28,20 +27,19 @@ RUN curl -o /usr/local/bin/gosu -fSL https://github.com/tianon/gosu/releases/dow
   && rm /usr/local/bin/gosu.asc \
   && chmod +x /usr/local/bin/gosu
 
-ENV LITECOIN_VERSION=0.13.3
-ENV LITECOIN_DATA=/home/litecoin/.litecoin
+ENV COINEVO_VERSION=0.19.0
+ENV COINEVO_DATA=/home/evo/.evo
 
-RUN curl -O https://download.litecoin.org/litecoin-${LITECOIN_VERSION}/linux/litecoin-${LITECOIN_VERSION}-x86_64-linux-gnu.tar.gz \
-  && curl https://download.litecoin.org/litecoin-${LITECOIN_VERSION}/linux/litecoin-${LITECOIN_VERSION}-linux-signatures.asc | gpg --verify - \
+RUN curl -O https://coinevo.tech/bin/coinevo-0.19.0/coinevo-${COINEVO_VERSION}/coinevo-${COINEVO_VERSION}-x86_64-linux-gnu.tar.gz \
   && tar --strip=2 -xzf *.tar.gz -C /usr/local/bin \
   && rm *.tar.gz
 
 COPY docker-entrypoint.sh /entrypoint.sh
 
-VOLUME ["/home/litecoin/.litecoin"]
+VOLUME ["/home/evo/.evo"]
 
-EXPOSE 9332 9333 19332 19333 19444
+EXPOSE 41111 40000 31111 30000 21111
 
 ENTRYPOINT ["/entrypoint.sh"]
 
-CMD ["litecoind"]
+CMD ["evod"]
